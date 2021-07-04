@@ -48,9 +48,11 @@ class Products with ChangeNotifier {
     return _items.where((prodItem) => prodItem.isFavorite).toList();
   }
 
-  void addProduct(Product product) {
-    final url ='https://flutterproject-e1375-default-rtdb.asia-southeast1.firebasedatabase.app/products.json';
-    http.post(
+  Future<void> addProduct(Product product) {
+    final url =
+        'https://flutterproject-e1375-default-rtdb.asia-southeast1.firebasedatabase.app/products.json';
+    return http
+        .post(
       Uri.parse(url),
       body: json.encode({
         'title': product.title,
@@ -59,16 +61,18 @@ class Products with ChangeNotifier {
         'imageUrl': product.imageUrl,
         'isFavorite': product.isFavorite,
       }),
-    );
-    final newProduct = Product(
-      title: product.title,
-      price: product.price,
-      description: product.description,
-      imageUrl: product.imageUrl,
-      id: DateTime.now().toString(),
-    );
-    _items.add(newProduct);
-    notifyListeners();
+    )
+        .then((response) {
+      final newProduct = Product(
+        title: product.title,
+        price: product.price,
+        description: product.description,
+        imageUrl: product.imageUrl,
+        id: json.decode(response.body)['name'],
+      );
+      _items.add(newProduct);
+      notifyListeners();
+    });
   }
 
   void updateProduct(String id, Product newProduct) {

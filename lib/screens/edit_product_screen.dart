@@ -98,7 +98,23 @@ class _EditProductScreenState extends State<EditProductScreen> {
     } else {
       Provider.of<Products>(context, listen: false)
           .addProduct(_editedProduct)
-          .then((_) {
+          .catchError((error) {
+        return showDialog<Null>(
+          context: context,
+          builder: (ctx) => AlertDialog(
+            title: Text("An Error Occured!!"),
+            content: Text('SomeThing went worng!!'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(ctx).pop();
+                },
+                child: Text('Okay'),
+              )
+            ],
+          ),
+        );
+      }).then((_) {
         setState(() {
           _isLoading = false;
         });
@@ -233,7 +249,9 @@ class _EditProductScreenState extends State<EditProductScreen> {
                             ),
                           ),
                           child: _imageUrlController.text.isEmpty
-                              ? Text('Enter Url')
+                              ? Center(
+                                  child: Text('Enter Url'),
+                                )
                               : FittedBox(
                                   child: Image.network(
                                     _imageUrlController.text,

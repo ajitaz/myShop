@@ -54,8 +54,11 @@ class Products with ChangeNotifier {
         'https://flutterproject-e1375-default-rtdb.asia-southeast1.firebasedatabase.app/products.json';
     try {
       final response = await http.get(Uri.parse(url));
-      final extractedData = json.decode(response.body) as Map<String, dynamic>;
+      final extractedData = json.decode(response.body) as Map<String, dynamic>?;
       final List<Product> loadedProduct = [];
+      if(extractedData == null){
+        return;
+      }
       extractedData.forEach((prodId, prodData) {
         loadedProduct.add(
           Product(

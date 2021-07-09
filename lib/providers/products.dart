@@ -40,6 +40,12 @@ class Products with ChangeNotifier {
     //       'https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Cast-Iron-Pan.jpg/1024px-Cast-Iron-Pan.jpg',
     // ),
   ];
+  String? authToken;
+
+  void update(String? token, List<Product> items) {
+    this.authToken = token;
+    this._items = items;
+  }
 
   List<Product> get items {
     return [..._items];
@@ -50,13 +56,13 @@ class Products with ChangeNotifier {
   }
 
   Future<void> fetchAndSetProduct() async {
-    const url =
-        'https://flutterproject-e1375-default-rtdb.asia-southeast1.firebasedatabase.app/products.json';
+    final url =
+        'https://flutterproject-e1375-default-rtdb.asia-southeast1.firebasedatabase.app/products.json?auth=$authToken';
     try {
       final response = await http.get(Uri.parse(url));
       final extractedData = json.decode(response.body) as Map<String, dynamic>?;
       final List<Product> loadedProduct = [];
-      if(extractedData == null){
+      if (extractedData == null) {
         return;
       }
       extractedData.forEach((prodId, prodData) {

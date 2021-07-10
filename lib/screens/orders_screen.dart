@@ -39,7 +39,9 @@ class _OrdersScreenState extends State<OrdersScreen> {
                 );
               } else {
                 if (dataSnapshot.error != null) {
-                  return Text('An error occured');
+                  return Center(
+                    child: Text('An error occured'),
+                  );
                 } else {
                   return Consumer<Order>(
                       builder: (ctx, orderData, child) => ListView.builder(

@@ -26,36 +26,36 @@ class _OrdersScreenState extends State<OrdersScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text('Your Orders'),
-        ),
-        drawer: AppDrawer(),
-        body: FutureBuilder(
-            future: _ordersFuture,
-            builder: (ctx, dataSnapshot) {
-              if (dataSnapshot.connectionState == ConnectionState.waiting) {
+      appBar: AppBar(
+        title: Text('Your Orders'),
+      ),
+      drawer: AppDrawer(),
+      body: FutureBuilder(
+          future: _ordersFuture,
+          builder: (ctx, dataSnapshot) {
+            if (dataSnapshot.connectionState == ConnectionState.waiting) {
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            } else {
+              if (dataSnapshot.error != null) {
                 return Center(
-                  child: CircularProgressIndicator(),
+                  child: Text('An error occured'),
                 );
               } else {
-                if (dataSnapshot.error != null) {
-                  return Center(
-                    child: Text('An error occured'),
-                  );
-                } else {
-                  return Consumer<Order>(
-                      builder: (ctx, orderData, child) =>
-                          orderData.orders.isEmpty
-                              ? Center(
-                                  child: Text('No Orders Yet!!'),
-                                )
-                              : ListView.builder(
-                                  itemBuilder: (ctx, i) =>
-                                      OrderItem(orderData.orders[i]),
-                                  itemCount: orderData.orders.length,
-                                ));
-                }
+                return Consumer<Order>(
+                    builder: (ctx, orderData, child) => orderData.orders.isEmpty
+                        ? Center(
+                            child: Text('No Orders Yet!!'),
+                          )
+                        : ListView.builder(
+                            itemBuilder: (ctx, i) =>
+                                OrderItem(orderData.orders[i]),
+                            itemCount: orderData.orders.length,
+                          ));
               }
-            }));
+            }
+          }),
+    );
   }
 }
